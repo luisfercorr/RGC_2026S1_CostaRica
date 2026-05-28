@@ -5,66 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vinculación Objetivos Estratégicos — Resultados Esperados — Operaciones · EBP Costa Rica 2024-2027</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0f1729;--panel:#16213a;--ink:#e8edf7;--muted:#8da2c0;--line:#26344f;
+    --bg:#ffffff;--panel:#f5f7fb;--ink:#1a2238;--muted:#5d6b85;--line:#dee3ed;
     --alta:#3fb96b;--media:#f2c14e;--baja:#e0524d;
     --p1:#4ea3d6;--p2:#7bc47f;--p3:#e8956b;
+    --font:"Montserrat",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Georgia","Times New Roman",serif;}
-  header{padding:28px 36px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#13203b,#0f1729);}
-  h1{font-size:25px;margin:0 0 6px;letter-spacing:.2px;font-weight:600;}
-  .sub{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;color:var(--muted);line-height:1.5;max-width:1140px;}
-  .stats{display:flex;gap:30px;flex-wrap:wrap;margin:18px 36px 4px;font-family:"Helvetica Neue",Arial,sans-serif;}
-  .stat .n{font-size:30px;font-weight:700;color:var(--ink);font-family:Georgia,serif;}
-  .stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
-  .legend{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin:14px 36px 4px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;color:var(--muted);}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font);}
+  header{padding:28px 36px 18px;border-bottom:1px solid var(--line);background:#f9fafd;}
+  h1{font-size:25px;margin:0 0 6px;letter-spacing:.2px;font-weight:600;color:var(--ink);font-family:var(--font);}
+  .sub{font-family:var(--font);font-size:13px;color:var(--muted);line-height:1.5;max-width:1140px;font-weight:400;}
+  .stats{display:flex;gap:30px;flex-wrap:wrap;margin:18px 36px 4px;font-family:var(--font);}
+  .stat .n{font-size:30px;font-weight:700;color:var(--ink);font-family:var(--font);}
+  .stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;font-weight:500;}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin:14px 36px 4px;font-family:var(--font);font-size:12px;color:var(--muted);font-weight:400;}
   .legend .grp{display:flex;gap:9px;align-items:center;}
   .legend .sw{width:22px;height:0;border-top-width:3px;border-top-style:solid;}
   .legend .dot{width:13px;height:13px;border-radius:3px;}
   .legend .bar{width:130px;height:12px;border-radius:3px;background:linear-gradient(90deg,#e0524d 0%, #ef8a4d 25%, #f2c14e 50%, #b6c84a 75%, #3fb96b 100%);}
-  .note{margin:6px 36px 2px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:var(--muted);font-style:italic;max-width:1140px;line-height:1.55;}
-  svg{display:block;width:100%;}
-  .node-label{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;fill:var(--ink);cursor:default;}
+  .note{margin:6px 36px 2px;font-family:var(--font);font-size:11px;color:var(--muted);font-style:italic;max-width:1140px;line-height:1.55;font-weight:400;}
+  svg{display:block;width:100%;background:#ffffff;font-family:var(--font);}
+  .node-label{font-family:var(--font);font-size:12px;fill:var(--ink);cursor:default;font-weight:500;}
   .node-rect{cursor:pointer;}
   .link{fill:none;transition:opacity .18s;}
-  .dim{opacity:.05 !important;}
-  .pilar-zone{opacity:.07;}
-  .pilar-frame{fill:none;stroke-width:1.4;stroke-dasharray:6,5;opacity:.55;}
-  .pilar-label{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;}
-  .colhead{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;fill:var(--muted);}
-  .tip{position:fixed;pointer-events:none;background:#0a1120;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;color:var(--ink);max-width:340px;opacity:0;transition:opacity .12s;box-shadow:0 8px 26px rgba(0,0,0,.5);z-index:9;}
-  footer{padding:14px 36px 30px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:var(--muted);}
+  .dim{opacity:.08 !important;}
+  .pilar-zone{opacity:.10;}
+  .pilar-frame{fill:none;stroke-width:1.4;stroke-dasharray:6,5;opacity:.6;}
+  .pilar-label{font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:.5px;}
+  .colhead{font-family:var(--font);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;fill:var(--muted);}
+  .tip{position:fixed;pointer-events:none;background:#1a2238;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-family:var(--font);font-size:12px;color:#ffffff;max-width:340px;opacity:0;transition:opacity .12s;box-shadow:0 8px 26px rgba(0,0,0,.18);z-index:9;font-weight:400;}
+  footer{padding:14px 36px 30px;font-family:var(--font);font-size:11px;color:var(--muted);border-top:1px solid var(--line);font-weight:400;}
 </style>
 </head>
 <body>
 <header>
   <h1>Vinculación de la Estrategia de País con la Cartera</h1>
-  <div class="sub">Cartera de Costa Rica — Encadenamiento de los <strong>Objetivos Estratégicos</strong> de la EBP 2024-2027 con sus <strong>Resultados Esperados</strong> y las <strong>Operaciones</strong>, organizado por área prioritaria. Las operaciones se colorean por su probabilidad de logro; los resultados esperados y objetivos, por el promedio simple de probabilidad de las operaciones vinculadas, conforme a la metodología del Anexo II de las Guías ICPR de OVE (noviembre 2023).</div>
+  <div class="sub">Cartera de Costa Rica — Encadenamiento de los <strong>Objetivos Estratégicos</strong> de la EBP 2024-2027 con sus <strong>Resultados Esperados</strong> y las <strong>Operaciones</strong>, organizado por área prioritaria. Las operaciones se colorean por su probabilidad de logro; los resultados esperados y objetivos, por el promedio simple de probabilidad de las operaciones vinculadas.</div>
 </header>
 
 <div class="stats" id="stats"></div>
 
 <div class="legend">
-  <div class="grp"><span style="font-family:Helvetica,Arial;font-weight:700;color:var(--ink)">Operaciones:</span></div>
+  <div class="grp"><span style="font-family:var(--font);font-weight:700;color:var(--ink)">Operaciones:</span></div>
   <div class="grp"><span class="dot" style="background:var(--alta)"></span> Alta</div>
   <div class="grp"><span class="dot" style="background:var(--media)"></span> Media</div>
   <div class="grp"><span class="dot" style="background:var(--baja)"></span> Baja</div>
-  <div class="grp" style="margin-left:14px"><span style="font-family:Helvetica,Arial;font-weight:700;color:var(--ink)">Promedio RE/OE:</span></div>
+  <div class="grp" style="margin-left:14px"><span style="font-family:var(--font);font-weight:700;color:var(--ink)">Promedio RE/OE:</span></div>
   <div class="grp"><span style="font-size:11px">1.0</span><span class="bar"></span><span style="font-size:11px">3.0</span></div>
 </div>
 <div class="legend" style="margin-top:4px">
-  <div class="grp"><span style="font-family:Helvetica,Arial;font-weight:700;color:var(--ink)">Alineación (OVE):</span></div>
+  <div class="grp"><span style="font-family:var(--font);font-weight:700;color:var(--ink)">Alineación:</span></div>
   <div class="grp"><span class="sw" style="border-top-width:4px;border-top-color:var(--muted)"></span> Fuerte</div>
   <div class="grp"><span class="sw" style="border-top-style:dashed;border-top-color:var(--muted)"></span> Débil</div>
-  <div class="grp"><span class="sw" style="border-top-style:dotted;border-top-color:#48597a"></span> Sin cobertura</div>
+  <div class="grp"><span class="sw" style="border-top-style:dotted;border-top-color:#9aa5bb"></span> Sin cobertura</div>
 </div>
-<div class="note">Metodología OVE pura: probabilidad de logro Baja=1, Media=2, Alta=3; promedio simple no ponderado de todas las operaciones alineadas. Umbrales del Cuadro II.4 de OVE — promedio ≤1.5 baja (rojo) · entre 1.5 y 2.4 media (amarillo) · ≥2.4 alta (verde). Estilo de líneas RE → OE: fuerte (≥51% de operaciones con alineación fuerte) o débil (Anexo I OVE).</div>
+<div class="note">Probabilidad de logro: Baja=1, Media=2, Alta=3. Promedio simple no ponderado de todas las operaciones alineadas. Umbrales de color — promedio ≤1.5 baja (rojo) · entre 1.5 y 2.4 media (amarillo) · ≥2.4 alta (verde). Estilo de líneas resultado esperado → objetivo estratégico: fuerte cuando al menos 51% de las operaciones tienen alineación fuerte; débil en caso contrario.</div>
 
 <svg id="chart"></svg>
 <div class="tip" id="tip"></div>
-<footer>Fuentes: Anexo I (Matriz de Resultados) de la EBP Costa Rica 2024-2027 (GN-3250); Guías de Implementación de las Revisiones Independientes de Programa de País (ICPR), Anexos I y II, OVE, noviembre 2023; ejercicio de clasificación de alineación de la cartera y valoración de probabilidad de logro por operación. Elaboración: equipo de Efectividad en el Desarrollo de CID.</footer>
+<footer>Fuentes: Anexo I (Matriz de Resultados) de la EBP Costa Rica 2024-2027 (GN-3250); ejercicio de clasificación de alineación de la cartera y valoración de probabilidad de logro por operación. Elaboración: equipo de Efectividad en el Desarrollo de CID.</footer>
 
 <script>
 const PILARES={"P1":{name:"Infraestructura resiliente y acción climática",color:"#4ea3d6"},"P2":{name:"Entorno habilitante para el sector privado",color:"#7bc47f"},"P3":{name:"Protección del contrato social",color:"#e8956b"}};
@@ -84,11 +88,11 @@ const ER={
 const PROB={"CR-L1065":"Alta","CR-L1151":"Baja","CR-L1032":"Media","CR-L1139":"Alta","CR-L1137":"Media","CR-J0002":"Media","CR-L1156":"Alta","CR-L1152":"Alta","CR-L1157":"Alta","CR-L1066":"Alta","CR-L1070":"Alta"};
 const PROBCOLOR={"Alta":"#3fb96b","Media":"#f2c14e","Baja":"#e0524d"};
 const V={"Baja":1,"Media":2,"Alta":3};
-// EDGES updated: CR-L1065 and CR-L1066 to Strong; CR-L1070 ↔ financiamiento climático REMOVED
 const EDGES=[
   ["CR-J0002","Reducir los comportamientos delictivos de adolescentes y jóvenes vulnerables a la violencia que participan en los CCP","High","Strong"],
   ["CR-L1152","Disminuir el rezago educativo de los estudiantes de primaria y secundaria, nacionales y migrantes","High","Strong"],
   ["CR-L1139","Reducción de tiempos de viaje en carreteras intervenidas","High","Strong"],
+  ["CR-L1139","Aumentar capacidad regulatoria e institucional en materia de APP","High","Strong"],
   ["CR-L1065","Reducción de tiempos de viaje en carreteras intervenidas","High","Strong"],
   ["CR-L1065","Reducción de la vulnerabilidad de las carreteras a eventos climáticos","High","Strong"],
   ["CR-L1066","Reducir los tiempos de cruce de fronteras de mercancías y personas","High","Strong"],
@@ -102,15 +106,13 @@ const EDGES=[
   ["CR-L1157","Incrementar la confiabilidad del sistema de distribución eléctrico","High","Strong"]
 ];
 
-// ---------- Continuous color scale anchored at OVE thresholds (1.5 and 2.4) ----------
 const colorScale = d3.scaleLinear()
   .domain([1.0, 1.5, 2.0, 2.4, 3.0])
   .range(["#e0524d","#ef8a4d","#f2c14e","#b6c84a","#3fb96b"])
   .interpolate(d3.interpolateRgb).clamp(true);
-function gradColor(a){if(a===null)return "#48597a"; return colorScale(a);}
-function avgLabel(a){if(a===null)return "sin operación vinculada"; return "prom. simple "+a.toFixed(2);}
+function gradColor(a){if(a===null)return "#c8cfdc"; return colorScale(a);}
+function avgLabel(a){if(a===null)return "sin operación vinculada"; return "prom. "+a.toFixed(2);}
 
-// ---------- ordered sets (ALL REs and OEs from Anexo I) ----------
 const pilarOrder=["P1","P2","P3"];
 const ersOrdered=[];
 pilarOrder.forEach(p=>Object.keys(ER).forEach(er=>{if(ER[er].p===p&&!ersOrdered.includes(er))ersOrdered.push(er);}));
@@ -119,12 +121,10 @@ pilarOrder.forEach(p=>ersOrdered.forEach(er=>{if(ER[er].p===p){const o=ER[er].ob
 const ops=[];
 pilarOrder.forEach(p=>ersOrdered.forEach(er=>{if(ER[er].p===p){EDGES.filter(e=>e[1]===er).map(e=>e[0]).forEach(op=>{if(!ops.includes(op))ops.push(op);});}}));
 
-// ---------- OVE-pure simple averages ----------
 function savg(rows){if(!rows.length)return null;return rows.reduce((a,b)=>a+V[PROB[b]],0)/rows.length;}
 const erAvg={};ersOrdered.forEach(er=>{erAvg[er]=savg(EDGES.filter(e=>e[1]===er).map(e=>e[0]));});
 const objAvg={};objsOrdered.forEach(o=>{objAvg[o.name]=savg(EDGES.filter(e=>ER[e[1]].obj===o.name).map(e=>e[0]));});
 
-// ---------- OVE alignment for REs (>=51% strong = Fuerte) ----------
 const reAlign={};
 ersOrdered.forEach(er=>{
   const rows=EDGES.filter(e=>e[1]===er);
@@ -133,12 +133,10 @@ ersOrdered.forEach(er=>{
   reAlign[er]= strongPct>=0.51 ? "Fuerte" : "Débil";
 });
 
-// ---------- stats ----------
 const stats=[[objsOrdered.length,"Objetivos Estratégicos"],[ersOrdered.length,"Resultados Esperados"],[ops.length,"Operaciones"],[EDGES.length,"Vínculos"],[EDGES.filter(e=>e[3]==="Strong").length,"Vínculos fuertes"],[EDGES.filter(e=>e[3]==="Weak").length,"Vínculos débiles"]];
 const sd=d3.select("#stats");
 stats.forEach(s=>{const d=sd.append("div").attr("class","stat");d.append("div").attr("class","n").text(s[0]);d.append("div").attr("class","l").text(s[1]);});
 
-// ---------- layout: vertical bands per pilar ----------
 const rowH=36, gapPilar=46, padTop=110, padBot=46;
 const pilarRows={};
 pilarOrder.forEach(p=>{
@@ -176,7 +174,6 @@ const totalOps=ops.length*rowH;
 const opsStart=padTop + (height-padTop-padBot-totalOps)/2;
 const yOps={}; ops.forEach((op,i)=>{yOps[op]=opsStart+i*rowH+rowH/2;});
 
-// PILAR ZONES
 const zoneLeft=colObj-wObj/2-18, zoneRight=colER+wER/2+18;
 pilarOrder.forEach(p=>{
   const top=pilarTop[p]-10, bot=pilarTop[p]+pilarRows[p]*rowH+10;
@@ -197,46 +194,44 @@ function curve(x1,y1,x2,y2){const mx=(x1+x2)/2;return `M${x1},${y1} C${mx},${y1}
 
 const linkLayer=svg.append("g");const allLinks=[];
 
-// RE -> OE links
 ersOrdered.forEach(er=>{
   const obj=ER[er].obj;
   const x1=colObj+wObj/2,y1=yObj[obj];const x2=colER-wER/2,y2=yER[er];
   const isFuerte = reAlign[er]==="Fuerte";
   const isSinCob = reAlign[er]==="sin cobertura";
   const path=linkLayer.append("path").attr("class","link").attr("d",curve(x1,y1,x2,y2))
-    .attr("stroke", isSinCob?"#48597a":"#7a8aa8")
+    .attr("stroke", isSinCob?"#9aa5bb":"#7a8aa8")
     .attr("stroke-width", isFuerte?3.2:1.3)
     .attr("stroke-dasharray", isFuerte?null:(isSinCob?"2,5":"4,4"))
-    .attr("opacity", isFuerte?0.78:(isSinCob?0.4:0.55))
+    .attr("opacity", isFuerte?0.78:(isSinCob?0.55:0.65))
     .attr("data-er",er).attr("data-obj",obj);
-  path.on("mouseover",ev=>showTip(`<b>RE → OE</b><br>${er}<br>→ <i>${obj}</i><br><span style='color:var(--muted)'>Alineación del RE (OVE): <b>${reAlign[er]==="sin cobertura"?"Sin cobertura":reAlign[er]}</b></span>`,ev))
+  path.on("mouseover",ev=>showTip(`<b>RE → OE</b><br>${er}<br>→ <i>${obj}</i><br><span style='color:#c8cfdc'>Alineación del RE: <b>${reAlign[er]==="sin cobertura"?"Sin cobertura":reAlign[er]}</b></span>`,ev))
       .on("mousemove",ev=>showTip(tip.html(),ev)).on("mouseout",hideTip);
   allLinks.push(path);
 });
 
-// OP -> RE links
 EDGES.forEach(e=>{const[op,er,feas,align]=e;const col=PROBCOLOR[PROB[op]];const x1=colER+wER/2,y1=yER[er];const x2=colOps-wOps/2,y2=yOps[op];
-  const path=linkLayer.append("path").attr("class","link").attr("d",curve(x1,y1,x2,y2)).attr("stroke",col).attr("stroke-width",align==="Strong"?3.6:1.5).attr("stroke-dasharray",align==="Strong"?null:"4,4").attr("opacity",align==="Strong"?0.85:0.58).attr("data-op",op).attr("data-er",er).attr("data-obj",ER[er].obj);
-  path.on("mouseover",ev=>showTip(`<b>${op}</b> · prob. ${PROB[op]}<br>→ ${er}<br><span style='color:var(--muted)'>Alineación: <b>${align==="Strong"?"Fuerte":"Débil"}</b></span>`,ev)).on("mousemove",ev=>showTip(tip.html(),ev)).on("mouseout",hideTip);allLinks.push(path);});
+  const path=linkLayer.append("path").attr("class","link").attr("d",curve(x1,y1,x2,y2)).attr("stroke",col).attr("stroke-width",align==="Strong"?3.6:1.5).attr("stroke-dasharray",align==="Strong"?null:"4,4").attr("opacity",align==="Strong"?0.85:0.6).attr("data-op",op).attr("data-er",er).attr("data-obj",ER[er].obj);
+  path.on("mouseover",ev=>showTip(`<b>${op}</b> · prob. ${PROB[op]}<br>→ ${er}<br><span style='color:#c8cfdc'>Alineación: <b>${align==="Strong"?"Fuerte":"Débil"}</b></span>`,ev)).on("mousemove",ev=>showTip(tip.html(),ev)).on("mouseout",hideTip);allLinks.push(path);});
 
-// NODES
 function drawNode(x,y,w,label,fill,meta){const g=svg.append("g");const h=26;
-  g.append("rect").attr("class","node-rect").attr("x",x-w/2).attr("y",y-h/2).attr("width",w).attr("height",h).attr("rx",6).attr("fill",fill).attr("opacity",0.95);
+  g.append("rect").attr("class","node-rect").attr("x",x-w/2).attr("y",y-h/2).attr("width",w).attr("height",h).attr("rx",6).attr("fill",fill).attr("opacity",0.95).attr("stroke","#ffffff").attr("stroke-width",0.5);
   const t=g.append("text").attr("class","node-label").attr("x",x).attr("y",y+4).attr("text-anchor","middle").text(label);
   const c=d3.color(fill); const lum=c?(0.299*c.r+0.587*c.g+0.114*c.b):255;
-  if(lum>140) t.attr("fill","#0f1729");
+  // dark text on light fills; white text on dark fills
+  if(lum>140) t.attr("fill","#1a2238"); else t.attr("fill","#ffffff");
   let fs=12;while(t.node().getComputedTextLength()>w-14&&fs>8){fs-=0.5;t.attr("font-size",fs+"px");}
   if(t.node().getComputedTextLength()>w-14){let txt=label;while(t.node().getComputedTextLength()>w-14&&txt.length>4){txt=txt.slice(0,-1);t.text(txt+"…");}}
   g.style("cursor","pointer").on("mouseover",ev=>{highlight(meta);if(meta.full)showTip(meta.full,ev);}).on("mousemove",ev=>{if(meta.full)showTip(tip.html(),ev);}).on("mouseout",()=>{unhighlight();hideTip();});return g;}
 
 objsOrdered.forEach(o=>{
   const c=gradColor(objAvg[o.name]);
-  drawNode(colObj,yObj[o.name],wObj,o.name,c,{type:"obj",obj:o.name,full:`<b>Objetivo estratégico</b><br>${o.name}<br><span style='color:var(--muted)'>Área prioritaria: ${PILARES[o.p].name}</span><br>Contribución: <b>${avgLabel(objAvg[o.name])}</b>`});
+  drawNode(colObj,yObj[o.name],wObj,o.name,c,{type:"obj",obj:o.name,full:`<b>Objetivo estratégico</b><br>${o.name}<br><span style='color:#c8cfdc'>Área prioritaria: ${PILARES[o.p].name}</span><br>Probabilidad: <b>${avgLabel(objAvg[o.name])}</b>`});
 });
 ersOrdered.forEach(er=>{
   const c=gradColor(erAvg[er]);
   const alignLabel = reAlign[er]==="sin cobertura" ? "Sin cobertura" : reAlign[er];
-  drawNode(colER,yER[er],wER,er,c,{type:"er",er:er,full:`<b>Resultado esperado</b><br>${er}<br>Contribución: <b>${avgLabel(erAvg[er])}</b><br>Alineación (OVE): <b>${alignLabel}</b>`});
+  drawNode(colER,yER[er],wER,er,c,{type:"er",er:er,full:`<b>Resultado esperado</b><br>${er}<br>Probabilidad: <b>${avgLabel(erAvg[er])}</b><br>Alineación: <b>${alignLabel}</b>`});
 });
 ops.forEach(op=>{const col=PROBCOLOR[PROB[op]];drawNode(colOps,yOps[op],wOps,op,col,{type:"op",op:op,full:`<b>${op}</b><br>Probabilidad de logro: <b>${PROB[op]}</b>`});});
 
