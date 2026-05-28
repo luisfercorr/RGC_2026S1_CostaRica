@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vinculación Objetivos Estratégicos — Resultados Esperados — Operaciones · EBP Costa Rica 2024-2027</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1729;--panel:#16213a;--ink:#e8edf7;--muted:#8da2c0;--line:#26344f;
+    --alta:#3fb96b;--media:#f2c14e;--baja:#e0524d;
+    --p1:#4ea3d6;--p2:#7bc47f;--p3:#e8956b;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Georgia","Times New Roman",serif;}
+  header{padding:28px 36px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#13203b,#0f1729);}
+  h1{font-size:25px;margin:0 0 6px;letter-spacing:.2px;font-weight:600;}
+  .sub{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;color:var(--muted);line-height:1.5;max-width:1140px;}
+  .stats{display:flex;gap:30px;flex-wrap:wrap;margin:18px 36px 4px;font-family:"Helvetica Neue",Arial,sans-serif;}
+  .stat .n{font-size:30px;font-weight:700;color:var(--ink);font-family:Georgia,serif;}
+  .stat .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .legend{display:flex;gap:22px;flex-wrap:wrap;align-items:center;margin:14px 36px 4px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;color:var(--muted);}
+  .legend .grp{display:flex;gap:9px;align-items:center;}
+  .legend .sw{width:22px;height:0;border-top-width:3px;border-top-style:solid;}
+  .legend .dot{width:13px;height:13px;border-radius:3px;}
+  .legend .bar{width:130px;height:12px;border-radius:3px;background:linear-gradient(90deg,#e0524d 0%, #ef8a4d 25%, #f2c14e 50%, #b6c84a 75%, #3fb96b 100%);}
+  .note{margin:6px 36px 2px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:var(--muted);font-style:italic;max-width:1140px;line-height:1.55;}
+  svg{display:block;width:100%;}
+  .node-label{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;fill:var(--ink);cursor:default;}
+  .node-rect{cursor:pointer;}
+  .link{fill:none;transition:opacity .18s;}
+  .dim{opacity:.05 !important;}
+  .pilar-zone{opacity:.07;}
+  .pilar-frame{fill:none;stroke-width:1.4;stroke-dasharray:6,5;opacity:.55;}
+  .pilar-label{font-family:"Helvetica Neue",Arial,sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;}
+  .colhead{font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;fill:var(--muted);}
+  .tip{position:fixed;pointer-events:none;background:#0a1120;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:12px;color:var(--ink);max-width:340px;opacity:0;transition:opacity .12s;box-shadow:0 8px 26px rgba(0,0,0,.5);z-index:9;}
+  footer{padding:14px 36px 30px;font-family:"Helvetica Neue",Arial,sans-serif;font-size:11px;color:var(--muted);}
+</style>
+</head>
+<body>
+<header>
+  <h1>Vinculación de la Estrategia de País con la Cartera</h1>
+  <div class="sub">Cartera de Costa Rica — Encadenamiento de los <strong>Objetivos Estratégicos</strong> de la EBP 2024-2027 con sus <strong>Resultados Esperados</strong> y las <strong>Operaciones</strong>, organizado por área prioritaria. Las operaciones se colorean por su probabilidad de logro; los resultados esperados y objetivos, por el promedio ponderado de probabilidad (gradiente continuo).</div>
+</header>
+
+<div class="stats" id="stats"></div>
+
+<div class="legend">
+  <div class="grp"><span style="font-family:Helvetica,Arial;font-weight:700;color:var(--ink)">Operaciones:</span></div>
+  <div class="grp"><span class="dot" style="background:var(--alta)"></span> Alta</div>
+  <div class="grp"><span class="dot" style="background:var(--media)"></span> Media</div>
+  <div class="grp"><span class="dot" style="background:var(--baja)"></span> Baja</div>
+  <div class="grp" style="margin-left:14px"><span style="font-family:Helvetica,Arial;font-weight:700;color:var(--ink)">Promedio ponderado (RE/OE):</span></div>
+  <div class="grp"><span style="font-size:11px">1.0</span><span class="bar"></span><span style="font-size:11px">3.0</span></div>
+</div>
+<div class="legend" style="margin-top:4px">
+  <div class="grp"><span style="font-family:Helvetica,Arial;font-weight:700;color:var(--ink)">Alineación (OVE):</span></div>
+  <div class="grp"><span class="sw" style="border-top-width:4px;border-top-color:var(--muted)"></span> Fuerte</div>
+  <div class="grp"><span class="sw" style="border-top-style:dashed;border-top-color:var(--muted)"></span> Débil</div>
+</div>
+<div class="note">Color de nodos: operaciones en categoría discreta (Alta/Media/Baja). Resultados esperados y objetivos en gradiente continuo según promedio ponderado de probabilidad — Baja=1, Media=2, Alta=3; peso del vínculo fuerte=1.0, débil=0.5. Estilo de líneas: las líneas operación → resultado esperado siguen la alineación de cada vínculo individual; las líneas resultado esperado → objetivo siguen la regla OVE (RE fuerte si ≥51% de las operaciones alineadas son fuertes).</div>
+
+<svg id="chart"></svg>
+<div class="tip" id="tip"></div>
+<footer>Fuente: Anexo I (Matriz de Resultados) de la EBP Costa Rica 2024-2027 (GN-3250); guías OVE para Revisiones Independientes de Programa de País (noviembre 2023, Anexo I); ejercicio de clasificación de alineación de la cartera y valoración de probabilidad de logro por operación. Elaboración: equipo de Efectividad en el Desarrollo de CID.</footer>
+
+<script>
+const PILARES={"P1":{name:"Infraestructura resiliente y acción climática",color:"#4ea3d6"},"P2":{name:"Entorno habilitante para el sector privado",color:"#7bc47f"},"P3":{name:"Protección del contrato social",color:"#e8956b"}};
+const ER={
+  "Reducción de tiempos de viaje en carreteras intervenidas":{p:"P1",obj:"Mejorar la calidad y la resiliencia de la infraestructura de transporte"},
+  "Reducción de la vulnerabilidad de las carreteras a eventos climáticos":{p:"P1",obj:"Mejorar la calidad y la resiliencia de la infraestructura de transporte"},
+  "Incrementar la confiabilidad del sistema de distribución eléctrico":{p:"P1",obj:"Mejorar la confiabilidad del sistema eléctrico"},
+  "Incrementar el financiamiento climático movilizado por el Grupo BID":{p:"P1",obj:"Movilizar financiamiento climático"},
+  "Reducir los tiempos de cruce de fronteras de mercancías y personas":{p:"P2",obj:"Facilitar la integración comercial"},
+  "Aumentar los flujos comerciales internacionales":{p:"P2",obj:"Facilitar la integración comercial"},
+  "Aumentar capacidad regulatoria e institucional en materia de APP":{p:"P2",obj:"Fortalecer la capacidad regulatoria e institucional de las APP"},
+  "Aumentar el crédito a las mipymes, incluidas las empresas propiedad de mujeres":{p:"P2",obj:"Aumentar la inclusión financiera de mipymes"},
+  "Disminuir el rezago educativo de los estudiantes de primaria y secundaria, nacionales y migrantes":{p:"P3",obj:"Fortalecer los servicios educativos para recuperar aprendizajes"},
+  "Reducir los comportamientos delictivos de adolescentes y jóvenes vulnerables a la violencia que participan en los CCP":{p:"P3",obj:"Prevenir el crimen entre los jóvenes usuarios de los CCP"},
+  "Aumentar el acceso de la población en pobreza con dependencia funcional a servicios de protección social":{p:"P3",obj:"Fortalecer el sistema de protección social"}
+};
+const PROB={"CR-L1065":"Alta","CR-L1151":"Baja","CR-L1032":"Media","CR-L1139":"Alta","CR-L1137":"Media","CR-J0002":"Media","CR-L1156":"Alta","CR-L1152":"Alta","CR-L1157":"Alta","CR-L1066":"Alta","CR-L1070":"Alta"};
+const PROBCOLOR={"Alta":"#3fb96b","Media":"#f2c14e","Baja":"#e0524d"};
+const V={"Baja":1,"Media":2,"Alta":3};
+const WLINK={"Strong":1.0,"Weak":0.5};
+const EDGES=[
+  ["CR-J0002","Reducir los comportamientos delictivos de adolescentes y jóvenes vulnerables a la violencia que participan en los CCP","High","Strong"],
+  ["CR-L1152","Disminuir el rezago educativo de los estudiantes de primaria y secundaria, nacionales y migrantes","High","Strong"],
+  ["CR-L1139","Reducción de tiempos de viaje en carreteras intervenidas","High","Strong"],
+  ["CR-L1065","Reducción de tiempos de viaje en carreteras intervenidas","Low","Weak"],
+  ["CR-L1065","Reducción de la vulnerabilidad de las carreteras a eventos climáticos","High","Strong"],
+  ["CR-L1066","Reducir los tiempos de cruce de fronteras de mercancías y personas","High","Strong"],
+  ["CR-L1066","Aumentar los flujos comerciales internacionales","Low","Weak"],
+  ["CR-L1070","Incrementar la confiabilidad del sistema de distribución eléctrico","High","Strong"],
+  ["CR-L1070","Incrementar el financiamiento climático movilizado por el Grupo BID","Low","Weak"],
+  ["CR-L1137","Reducir los comportamientos delictivos de adolescentes y jóvenes vulnerables a la violencia que participan en los CCP","High","Strong"],
+  ["CR-L1032","Reducción de la vulnerabilidad de las carreteras a eventos climáticos","Low","Weak"],
+  ["CR-L1151","Reducción de tiempos de viaje en carreteras intervenidas","High","Strong"],
+  ["CR-L1151","Reducción de la vulnerabilidad de las carreteras a eventos climáticos","High","Strong"],
+  ["CR-L1156","Aumentar el acceso de la población en pobreza con dependencia funcional a servicios de protección social","High","Strong"],
+  ["CR-L1157","Incrementar la confiabilidad del sistema de distribución eléctrico","High","Strong"]
+];
+
+// ---------- continuous gradient color scale 1..3 (red -> orange -> yellow -> green) ----------
+const colorScale = d3.scaleLinear()
+  .domain([1, 1.5, 2, 2.5, 3])
+  .range(["#e0524d","#ef8a4d","#f2c14e","#b6c84a","#3fb96b"])
+  .interpolate(d3.interpolateRgb)
+  .clamp(true);
+function gradColor(a){if(a===null)return "#48597a"; return colorScale(a);}
+function avgLabel(a){if(a===null)return "sin operación vinculada"; return "prom. pond. "+a.toFixed(2);}
+
+// ---------- ordered sets ----------
+const pilarOrder=["P1","P2","P3"];
+const ersUsed=Array.from(new Set(EDGES.map(e=>e[1])));
+const ersOrdered=[];
+pilarOrder.forEach(p=>Object.keys(ER).forEach(er=>{if(ER[er].p===p&&ersUsed.includes(er)&&!ersOrdered.includes(er))ersOrdered.push(er);}));
+const objsOrdered=[];
+pilarOrder.forEach(p=>ersOrdered.forEach(er=>{if(ER[er].p===p){const o=ER[er].obj;if(!objsOrdered.find(x=>x.name===o))objsOrdered.push({name:o,p:p});}}));
+const ops=[];
+pilarOrder.forEach(p=>ersOrdered.forEach(er=>{if(ER[er].p===p){EDGES.filter(e=>e[1]===er).map(e=>e[0]).forEach(op=>{if(!ops.includes(op))ops.push(op);});}}));
+
+// ---------- weighted averages ----------
+function wavg(rows){let num=0,den=0;rows.forEach(([op,al])=>{num+=V[PROB[op]]*WLINK[al];den+=WLINK[al];});return den?num/den:null;}
+const erAvg={};ersOrdered.forEach(er=>{erAvg[er]=wavg(EDGES.filter(e=>e[1]===er).map(e=>[e[0],e[3]]));});
+const objAvg={};objsOrdered.forEach(o=>{objAvg[o.name]=wavg(EDGES.filter(e=>ER[e[1]].obj===o.name).map(e=>[e[0],e[3]]));});
+
+// ---------- OVE alignment rules ----------
+// RE alignment: FUERTE if >=51% of aligned operations are Strong, else DÉBIL.
+const reAlign={};
+ersOrdered.forEach(er=>{
+  const rows=EDGES.filter(e=>e[1]===er);
+  if(!rows.length){reAlign[er]="sin cobertura";return;}
+  const strongPct=rows.filter(e=>e[3]==="Strong").length/rows.length;
+  reAlign[er]= strongPct>=0.51 ? "Fuerte" : "Débil";
+});
+
+// ---------- stats ----------
+const stats=[[objsOrdered.length,"Objetivos Estratégicos"],[ersOrdered.length,"Resultados Esperados"],[ops.length,"Operaciones"],[EDGES.length,"Vínculos"],[EDGES.filter(e=>e[3]==="Strong").length,"Vínculos fuertes"],[EDGES.filter(e=>e[3]==="Weak").length,"Vínculos débiles"]];
+const sd=d3.select("#stats");
+stats.forEach(s=>{const d=sd.append("div").attr("class","stat");d.append("div").attr("class","n").text(s[0]);d.append("div").attr("class","l").text(s[1]);});
+
+// ---------- layout ----------
+const rowH=36,padTop=96,padBot=44;
+const colObj=300,colER=790,colOps=1280;
+const wObj=320,wER=380,wOps=160;
+const N=Math.max(ops.length,ersOrdered.length,objsOrdered.length);
+const height=padTop+padBot+N*rowH+20;const width=1500;
+const svg=d3.select("#chart").attr("viewBox",`0 0 ${width} ${height}`).attr("height",height);
+function yPositions(arr){const total=arr.length*rowH;const start=padTop+((N*rowH)-total)/2;const m={};arr.forEach((d,i)=>{m[(d.name||d)]=start+i*rowH+rowH/2;});return m;}
+const yObj=yPositions(objsOrdered.map(o=>o.name));const yER=yPositions(ersOrdered);const yOps=yPositions(ops);
+
+// PILAR ZONES
+const zoneLeft=colObj-wObj/2-18, zoneRight=colER+wER/2+18;
+pilarOrder.forEach(p=>{
+  const objYs=objsOrdered.filter(o=>o.p===p).map(o=>yObj[o.name]);
+  const erYs=ersOrdered.filter(er=>ER[er].p===p).map(er=>yER[er]);
+  const ys=objYs.concat(erYs);
+  if(!ys.length)return;
+  const top=Math.min(...ys)-rowH/2-8, bot=Math.max(...ys)+rowH/2+8;
+  const col=PILARES[p].color;
+  svg.append("rect").attr("class","pilar-zone").attr("x",zoneLeft).attr("y",top).attr("width",zoneRight-zoneLeft).attr("height",bot-top).attr("rx",14).attr("fill",col);
+  svg.append("rect").attr("class","pilar-frame").attr("x",zoneLeft).attr("y",top).attr("width",zoneRight-zoneLeft).attr("height",bot-top).attr("rx",14).attr("stroke",col);
+  svg.append("text").attr("class","pilar-label").attr("x",zoneLeft+16).attr("y",top-8).attr("fill",col).text("▸ "+PILARES[p].name.toUpperCase());
+});
+
+svg.append("text").attr("class","colhead").attr("x",colObj).attr("y",70).attr("text-anchor","middle").text("Objetivos Estratégicos");
+svg.append("text").attr("class","colhead").attr("x",colER).attr("y",70).attr("text-anchor","middle").text("Resultados Esperados EBP");
+svg.append("text").attr("class","colhead").attr("x",colOps).attr("y",70).attr("text-anchor","middle").text("Operaciones");
+
+const tip=d3.select("#tip");
+function showTip(html,ev){tip.html(html).style("opacity",1).style("left",(ev.clientX+14)+"px").style("top",(ev.clientY+14)+"px");}
+function hideTip(){tip.style("opacity",0);}
+function curve(x1,y1,x2,y2){const mx=(x1+x2)/2;return `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`;}
+
+// ---------- links ----------
+const linkLayer=svg.append("g");const allLinks=[];
+
+// RE -> OE links: style follows OVE rule applied to the RE's alignment
+ersOrdered.forEach(er=>{
+  const obj=ER[er].obj;
+  const x1=colObj+wObj/2,y1=yObj[obj];const x2=colER-wER/2,y2=yER[er];
+  const isFuerte = reAlign[er]==="Fuerte";
+  const path=linkLayer.append("path").attr("class","link").attr("d",curve(x1,y1,x2,y2))
+    .attr("stroke","#7a8aa8")
+    .attr("stroke-width", isFuerte?3.2:1.5)
+    .attr("stroke-dasharray", isFuerte?null:"4,4")
+    .attr("opacity", isFuerte?0.78:0.55)
+    .attr("data-er",er).attr("data-obj",obj);
+  path.on("mouseover",ev=>showTip(`<b>RE → OE</b><br>${er}<br>→ <i>${obj}</i><br><span style='color:var(--muted)'>Alineación del RE (OVE): <b>${reAlign[er]}</b></span>`,ev))
+      .on("mousemove",ev=>showTip(tip.html(),ev)).on("mouseout",hideTip);
+  allLinks.push(path);
+});
+
+// OP -> RE links: colored by op probability, style by individual link strength
+EDGES.forEach(e=>{const[op,er,feas,align]=e;const col=PROBCOLOR[PROB[op]];const x1=colER+wER/2,y1=yER[er];const x2=colOps-wOps/2,y2=yOps[op];
+  const path=linkLayer.append("path").attr("class","link").attr("d",curve(x1,y1,x2,y2)).attr("stroke",col).attr("stroke-width",align==="Strong"?3.6:1.5).attr("stroke-dasharray",align==="Strong"?null:"4,4").attr("opacity",align==="Strong"?0.85:0.58).attr("data-op",op).attr("data-er",er).attr("data-obj",ER[er].obj);
+  path.on("mouseover",ev=>showTip(`<b>${op}</b> · prob. ${PROB[op]}<br>→ ${er}<br><span style='color:var(--muted)'>Alineación: <b>${align==="Strong"?"Fuerte":"Débil"}</b> (peso ${WLINK[align]})</span>`,ev)).on("mousemove",ev=>showTip(tip.html(),ev)).on("mouseout",hideTip);allLinks.push(path);});
+
+// ---------- nodes ----------
+function drawNode(x,y,w,label,fill,meta){const g=svg.append("g");const h=26;
+  g.append("rect").attr("class","node-rect").attr("x",x-w/2).attr("y",y-h/2).attr("width",w).attr("height",h).attr("rx",6).attr("fill",fill).attr("opacity",0.95);
+  const t=g.append("text").attr("class","node-label").attr("x",x).attr("y",y+4).attr("text-anchor","middle").text(label);
+  // dark text on warm/light fills (luminance check)
+  const c=d3.color(fill); const lum=c?(0.299*c.r+0.587*c.g+0.114*c.b):255;
+  if(lum>140) t.attr("fill","#0f1729");
+  let fs=12;while(t.node().getComputedTextLength()>w-14&&fs>8){fs-=0.5;t.attr("font-size",fs+"px");}
+  if(t.node().getComputedTextLength()>w-14){let txt=label;while(t.node().getComputedTextLength()>w-14&&txt.length>4){txt=txt.slice(0,-1);t.text(txt+"…");}}
+  g.style("cursor","pointer").on("mouseover",ev=>{highlight(meta);if(meta.full)showTip(meta.full,ev);}).on("mousemove",ev=>{if(meta.full)showTip(tip.html(),ev);}).on("mouseout",()=>{unhighlight();hideTip();});return g;}
+
+objsOrdered.forEach(o=>{
+  const c=gradColor(objAvg[o.name]);
+  drawNode(colObj,yObj[o.name],wObj,o.name,c,{type:"obj",obj:o.name,full:`<b>Objetivo estratégico</b><br>${o.name}<br><span style='color:var(--muted)'>Área prioritaria: ${PILARES[o.p].name}</span><br>Probabilidad: <b>${avgLabel(objAvg[o.name])}</b>`});
+});
+ersOrdered.forEach(er=>{
+  const c=gradColor(erAvg[er]);
+  drawNode(colER,yER[er],wER,er,c,{type:"er",er:er,full:`<b>Resultado esperado</b><br>${er}<br>Probabilidad: <b>${avgLabel(erAvg[er])}</b><br>Alineación (OVE): <b>${reAlign[er]}</b>`});
+});
+ops.forEach(op=>{const col=PROBCOLOR[PROB[op]];drawNode(colOps,yOps[op],wOps,op,col,{type:"op",op:op,full:`<b>${op}</b><br>Probabilidad de logro: <b>${PROB[op]}</b>`});});
+
+function highlight(meta){allLinks.forEach(l=>{const op=l.attr("data-op"),er=l.attr("data-er"),obj=l.attr("data-obj");let keep=false;
+  if(meta.type==="op"){const reachedER=EDGES.filter(e=>e[0]===meta.op).map(e=>e[1]);keep=(op===meta.op)||(!op&&reachedER.includes(er));}
+  if(meta.type==="er")keep=(er===meta.er);
+  if(meta.type==="obj"){const ersForObj=ersOrdered.filter(x=>ER[x].obj===meta.obj);keep=(obj===meta.obj)||(ersForObj.includes(er));}
+  if(!keep)l.classed("dim",true);});}
+function unhighlight(){allLinks.forEach(l=>l.classed("dim",false));}
+</script>
+</body>
+</html>
